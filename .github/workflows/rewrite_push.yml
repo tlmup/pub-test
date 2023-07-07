@@ -1,0 +1,22 @@
+name: run recipes and apply changes
+run-name: run recipes and apply changes
+on: [push]
+
+jobs:
+  rewrite-run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: run recipes
+        run: mvn -U org.openrewrite.maven:rewrite-maven-plugin:run -Drewrite.activeRecipes=org.openrewrite.java.format.AutoFormat -DskipMavenParsing=true
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+
+#      - run: 
+#              git config --global user.name "${{env.commit_author}}"
+#              git config --global user.email 'user@users.noreply.github.com'
+#              git commit -am "openrewrite changes"
+#              git push
+
